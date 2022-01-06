@@ -1,0 +1,50 @@
+{%extends 'base.html'%}
+{%block body_block%}
+<div class="row">
+  <div class="col-4"></div>
+  <div class="col-4"></div>
+  <div class="col-4">
+    <form action="" method="post" class="mb-3">
+      {%csrf_token%}
+      {{form.as_p}}
+      <input type="submit" value="Find">
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-1"></div>
+  <div class="col-10">
+      <table class="table">
+        <tr>
+          <th>Employeename</th>
+          <th>Designation</th>
+          <th>salary</th>
+          <th>Address</th>
+          <th>email</th>
+          <th>Action</th>
+        </tr>
+        {%for employee in employees%}
+
+        <tr>
+          <td>{{employee.emp_name}}</td>
+          <td>{{employee.designation}}</td>
+          <td>{{employee.salary}}</td>
+          <td>{{employee.address}}</td>
+          <td>{{employee.email}}</td>
+          <td>
+            <a href="{%url 'empdetails' employee.id%}" class="btn btn-outline btn-outline-success">View</a>
+            <a href="{%url 'changeemployee' employee.id%}" class="btn btn-outline btn-outline-warning">Edit</a>
+            <a href="{%url 'removeemployee' employee.id%}" class="btn btn-outline btn-outline-danger">Delete</a>
+          </td>
+        </tr>
+        {%endfor%}
+
+      </table>
+
+
+  </div>
+  <div class="col-1"></div>
+</div>
+
+
+{%endblock%}
