@@ -2,10 +2,11 @@ from django.shortcuts import render,redirect
 from employees import forms
 from employees.models import Employees
 from django.contrib.auth import authenticate,login,logout
+from employees.decorators import signin_required
 # Create your views here.
 
-
-def add_employee(request):
+@signin_required
+def add_employee(request,*args,**kwargs):
 
     form=forms.EmployeeForm()
     context={"form":form}
@@ -21,8 +22,8 @@ def add_employee(request):
 
     return render(request,"add_emp.html",context)
 
-
-def list_employees(request):
+@signin_required
+def list_employees(request,*args,**kwargs):
 
     employees=Employees.objects.filter(is_active=True)
     form=forms.EmployeeSearchForm()
@@ -37,14 +38,16 @@ def list_employees(request):
             return render(request, "list_emp.html", context)
 
     return render(request,"list_emp.html",context)
-
-def employee_detail(request,id):
+@signin_required
+def employee_detail(request,*args,**kwargs):
+    id=kwargs["id"]
     employee=Employees.objects.get(id=id)
     context={"employee":employee}
     return render(request,"detail_emp.html",context)
 
-
-def employee_update(request,id):
+@signin_required
+def employee_update(request,*args,**kwargs):
+    id=kwargs["id"]
     employee=Employees.objects.get(id=id)
     form=forms.EmployeeForm(instance=employee)
     context={"form":form}
@@ -59,7 +62,9 @@ def employee_update(request,id):
 
     return render(request,"change_emp.html",context)
 
-def remove_employee(request,id):
+@signin_required
+def remove_employee(request,*args,**kwargs):
+    id=kwargs["id"]
     employee=Employees.objects.get(id=id)
     employee.is_active=False
     employee.save()
@@ -98,7 +103,7 @@ def signin(request):
 
     return render(request,"login.html",context)
 
-
-def signout(request):
+@signin_required
+def signout(request,*args,**kwargs):
     logout(request)
     return redirect("signin")
